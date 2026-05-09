@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DOMA</title>
+
+<style>
+
+/* ====== GENERAL ====== */
+
+body{
+  margin:0;
+  overflow:hidden;
+  background:black;
+  font-family:'Courier New', monospace;
+  color:#00ff66;
+}
+
+/* ====== PANTALLA INICIO ====== */
+
+#pantallaInicio{
+  position:absolute;
+  width:100%;
+  height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+
+  background:black;
+}
+
+/* TITULO */
+
+#titulo{
+  font-size:120px;
+  color:#00ff66;
+
+  text-shadow:
+    5px 5px 0px black,
+    0px 0px 20px #00ff66;
+
+  letter-spacing:10px;
+
+  animation:flotar 2s ease-in-out infinite;
+
+  image-rendering:pixelated;
+}
+
+/* MOVIMIENTO */
+
+@keyframes flotar{
+
+  0%{
+    transform:translateY(0px);
+  }
+
+  50%{
+    transform:translateY(-15px);
+  }
+
+  100%{
+    transform:translateY(0px);
+  }
+
+}
+
+/* BOTON */
+
+#startBtn{
+  margin-top:40px;
+
+  padding:20px 50px;
+
+  font-size:32px;
+  font-family:'Courier New', monospace;
+
+  border:5px solid black;
+
+  background:#00ff66;
+  color:black;
+
+  cursor:pointer;
+
+  transition:0.2s;
+}
+
+/* HOVER */
+
+#startBtn:hover{
+
+  transform:scale(1.08);
+
+  box-shadow:
+    0 0 20px #00ff66,
+    0 0 40px #00ff66;
+
+}
+
+/* ====== LETRAS ====== */
+
+#lyricsScreen{
+
+  position:absolute;
+
+  width:100%;
+  height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+
+  background:black;
+
+}
+
+/* TEXTO */
+
+#lyrics{
+
+  font-size:42px;
+
+  color:#00ff66;
+
+  text-align:center;
+
+  width:80%;
+
+  line-height:1.6;
+
+  text-shadow:
+    0 0 10px #00ff66,
+    0 0 25px #00ff66;
+
+  animation:fade 1s;
+
+}
+
+/* APARECER */
+
+@keyframes fade{
+
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0px);
+  }
+
+}
+
+/* AUDIO */
+
+audio{
+
+  position:absolute;
+
+  bottom:20px;
+
+}
+
+/* ESCONDER */
+
+.hidden{
+  display:none !important;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ====== INICIO ====== -->
+
+<div id="pantallaInicio">
+
+  <h1 id="titulo">DOMA</h1>
+
+  <button id="startBtn">EMPEZAR</button>
+
+</div>
+
+<!-- ====== LETRAS ====== -->
+
+<div id="lyricsScreen" class="hidden">
+
+  <div id="lyrics">
+    ...
+  </div>
+
+  <audio id="song" controls>
+
+    <!-- CAMBIA ESTO POR TU MP3 -->
+
+    <source src="TU-CANCION.mp3" type="audio/mpeg">
+
+  </audio>
+
+</div>
+
+<script>
+
+/* ====== ELEMENTOS ====== */
+
+const startBtn = document.getElementById("startBtn");
+
+const pantallaInicio = document.getElementById("pantallaInicio");
+
+const lyricsScreen = document.getElementById("lyricsScreen");
+
+const lyrics = document.getElementById("lyrics");
+
+const song = document.getElementById("song");
+
+/* ====== LETRAS SINCRONIZADAS ====== */
+/*
+TIEMPO EN SEGUNDOS
+
+TÚ DESPUÉS CAMBIAS:
+- texto
+- segundos
+- duración
+*/
+
+const letras = [
+
+  {
+    tiempo:0,
+    texto:"..."
+  },
+
+  {
+    tiempo:5,
+    texto:"Que fatalidad..."
+  },
+
+  {
+    tiempo:10,
+    texto:"Eres mi héroe y mi villana"
+  },
+
+  {
+    tiempo:16,
+    texto:"De corazones tienes colección"
+  },
+
+  {
+    tiempo:23,
+    texto:"Podría enloquecer..."
+  },
+
+  {
+    tiempo:30,
+    texto:"Y sigo cayendo"
+  },
+
+  {
+    tiempo:38,
+    texto:"Aunque sé que dolerá"
+  }
+
+];
+
+/* ====== EMPEZAR ====== */
+
+startBtn.addEventListener("click", ()=>{
+
+  pantallaInicio.classList.add("hidden");
+
+  lyricsScreen.classList.remove("hidden");
+
+  song.play();
+
+});
+
+/* ====== SINCRONIZACION ====== */
+
+song.addEventListener("timeupdate", ()=>{
+
+  const tiempoActual = song.currentTime;
+
+  for(let i = 0; i < letras.length; i++){
+
+    if(
+      tiempoActual >= letras[i].tiempo &&
+      (
+        i === letras.length - 1 ||
+        tiempoActual < letras[i + 1].tiempo
+      )
+    ){
+
+      lyrics.innerText = letras[i].texto;
+
+    }
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
